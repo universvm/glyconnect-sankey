@@ -1,3 +1,4 @@
+
 // refactored according to https://github.com/kunalb/d3-plugins/blob/sankey/sankey/sankey.js
 
 d3.sankey = function () {
@@ -258,6 +259,10 @@ d3.sankey = function () {
                  break;
 
                  case "protein":
+                 node.x = 1;
+                 break;
+                 //adding the same position for either protein or glycan
+                 case "glycan":
                  node.x = 1;
                  break;
 
