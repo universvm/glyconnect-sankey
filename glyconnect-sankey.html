@@ -52,6 +52,7 @@ Creating a Sankey Graph for Glyconnect.
       attached: function() {
         console.log('test');
         this.sankeyCreate();
+        this.scopeSubtree(this.$.chart, true);
       },
       sankeyCreate: function() {
         var units = "Widgets";
