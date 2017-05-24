@@ -3,7 +3,7 @@
 <script src="https://d3js.org/d3.v3.js"></script>
 <script src="sankey4.js"></script>
 
-<!--
+<!--TODO: CHECK OUT https://stackoverflow.com/questions/16265123/resize-svg-when-window-is-resized-in-d3-js
 `glyconnect-sankey`
 Creating a Sankey Graph for Glyconnect.
 
@@ -36,8 +36,23 @@ Creating a Sankey Graph for Glyconnect.
       .link:hover {
         stroke-opacity: .5;
       }
+      .svg-container {
+          display: inline-block;
+          position: relative;
+          width: 100%;
+          padding-bottom: 100%; /* aspect ratio */
+          vertical-align: top;
+          overflow: hidden;
+      }
+      .svg-content-responsive {
+          display: inline-block;
+          position: absolute;
+          width: 50%;
+          top: 10px;
+          left: 0;
+      }
     </style>
-    <div id="chart"></div>
+    <div id="chart" />
 
   </template>
 
@@ -79,6 +94,16 @@ Creating a Sankey Graph for Glyconnect.
             .nodePadding(100)
             .size([width, height]);
         var path = sankey.link();
+
+        d3.select(this.$.chart)
+           .append("div")
+           .classed("svg-container", true) //container class to make it responsive
+           .append("svg")
+           //responsive SVG needs these 2 attributes and no width and height attr
+           .attr("preserveAspectRatio", "xMinYMin meet")
+           .attr("viewBox", "0 0 600 400")
+           //class to make it responsive
+           .classed("svg-content-responsive", true);
 
         // load the data
         d3.json(this.resolveUrl("sankey-formatted.json"), function(error, graph) {
