@@ -1,0 +1,41 @@
+
+{
+"nodes":[
+{"node":0, "id":"227", "name":"Homo Sapiens","group":"taxonomy"},
+
+{"node":1, "id":"546", "name":"Saposin B - P07602","group":"protein"},
+{"node":2,"id":"88", "name":"Choriogonadotropin alpha chain - P01215","group":"protein"},
+{"node":3,"id":"89", "name":"Choriogonadotropin beta chain - P01233","group":"protein"},
+
+{"node":4,"id":"2", "name":"P07602-1","group":"isoform"},
+{"node":5,"id":"3", "name":"P07602-2","group":"isoform"},
+{"node":6,"id":"4", "name":"P07602-3", "group":"isoform"},
+
+{"node":7,"id":"73", "name":"Liver","group":"tissue"},
+{"node":8,"id":"31", "name":"Urine","group":"tissue"},
+{"node":9,"id":"71", "name":"Plancental epithelium","group":"tissue"},
+
+{"node":10,"id":"14", "name":"Gangliosidosis GM1","group":"disease"},
+{"node":11,"id":"27", "name":"Choriocarcinoma","group":"disease"}
+
+
+],
+"links":[
+{"source":0,"target":1,"value":1},
+{"source":0,"target":2,"value":1},
+{"source":0,"target":3,"value":1},
+{"source":1,"target":4,"value":1},
+{"source":1,"target":5,"value":1},
+{"source":1,"target":6,"value":1},
+
+{"source":4,"target":7,"value":1},
+{"source":5,"target":7,"value":1},
+{"source":6,"target":7,"value":1},
+
+{"source":2,"target":8,"value":1},
+{"source":3,"target":9,"value":1},
+{"source":7,"target":10,"value":1},
+{"source":8,"target":11,"value":1},
+{"source":9,"target":11,"value":1}
+
+]}
