@@ -36,22 +36,8 @@ Creating a Sankey Graph for Glyconnect.
       .link:hover {
         stroke-opacity: .5;
       }
-      .svg-container {
-          display: inline-block;
-          position: relative;
-          width: 100%;
-          padding-bottom: 100%; /* aspect ratio */
-          vertical-align: top;
-          overflow: hidden;
-      }
-      .svg-content-responsive {
-          display: inline-block;
-          position: absolute;
-          top: 10px;
-          left: 0;
-      }
     </style>
-    <div id="chart" class="svg-container"/>
+    <div id="chart"/>
 
   </template>
 
@@ -81,11 +67,14 @@ Creating a Sankey Graph for Glyconnect.
 
         // append the svg canvas to the page
         var svg = d3.select(this.$.chart).append("svg")
+          .attr("viewBox", "0 0 900 500")
+          .attr("preserveAspectRatio", "xMinYMin meet")
+            .append("g")
             .attr("width", width + margin.left + margin.right)
             .attr("height", height + margin.top + margin.bottom)
+            //.attr("viewBox", "0 0 600 400")
           .append("g")
-            .attr("transform",
-                  "translate(" + margin.left + "," + margin.top + ")");
+            .attr("transform","translate(" + margin.left + "," + margin.top + ")");
 
         // Set the sankey diagram properties
         var sankey = d3.sankey()
@@ -94,15 +83,19 @@ Creating a Sankey Graph for Glyconnect.
             .size([width, height]);
         var path = sankey.link();
 
-        d3.select(this.$.chart)
-           .append("div")
-           .classed("svg-container", true) //container class to make it responsive
-           .append("svg")
-           //responsive SVG needs these 2 attributes and no width and height attr
-           .attr("preserveAspectRatio", "xMinYMin meet")
-           .attr("viewBox", "0 0 600 400")
-           //class to make it responsive
-           .classed("svg-content-responsive", true);
+        // var svg = d3.select(this.$.chart).append("svg")
+        //    .append("div")
+        //    .classed("svg-container", true) //container class to make it responsive
+        //    .append("svg")
+        //    .append("g")
+        //    .attr("width", width + margin.left + margin.right)
+        //    .attr("height", height + margin.top + margin.bottom)
+        //    //responsive SVG needs these 2 attributes and no width and height attr
+        //    .attr("preserveAspectRatio", "xMinYMin meet")
+        //    .attr("viewBox", "0 0 600 400")
+        //    //class to make it responsive
+        //    .classed("svg-content-responsive", true);
+        //    attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
         // load the data
         d3.json(this.resolveUrl("sankey-formatted.json"), function(error, graph) {
