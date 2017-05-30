@@ -261,21 +261,25 @@ d3.sankey = function () {
                  case "protein":
                  node.x = 1;
                  break;
-                 //adding the same position for either protein or glycan
-                 case "glycan":
-                 node.x = 1;
-                 break;
 
                  case "isoform":
                  node.x = 2;
                  break;
 
-                 case "tissue":
+                 case "site":
                  node.x = 3;
                  break;
 
-                 case "disease":
+                 case "glycan":
                  node.x = 4;
+                 break;
+
+                 case "tissue":
+                 node.x = 5;
+                 break;
+
+                 case "disease":
+                 node.x = 6;
                  break;
 
                  default:
