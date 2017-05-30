@@ -112,7 +112,8 @@ Creating a Sankey Graph for Glyconnect.
                 .size([width, height]);
         var path = sankey.link();
 
-        //d3.json(this.sankeyData, function(error, graph) {
+          //Remove d3.json(this.resolveUrl("sankey-formatted.json"), function(error, graph) {
+          //change graph to this.sankeyData
         d3.json(this.resolveUrl("sankey-formatted.json"), function(error, graph) {
 
           sankey.nodes(graph.nodes)
