@@ -68,7 +68,6 @@ Creating a Sankey Graph for Glyconnect.
         // append the svg canvas to the page
         var svg = d3.select(this.$.chart).append("svg")
           .attr("viewBox", "0 0 900 500")
-          .attr("preserveAspectRatio", "xMinYMin meet")
             .append("g")
             .attr("width", width + margin.left + margin.right)
             .attr("height", height + margin.top + margin.bottom)
@@ -83,21 +82,6 @@ Creating a Sankey Graph for Glyconnect.
             .size([width, height]);
         var path = sankey.link();
 
-        // var svg = d3.select(this.$.chart).append("svg")
-        //    .append("div")
-        //    .classed("svg-container", true) //container class to make it responsive
-        //    .append("svg")
-        //    .append("g")
-        //    .attr("width", width + margin.left + margin.right)
-        //    .attr("height", height + margin.top + margin.bottom)
-        //    //responsive SVG needs these 2 attributes and no width and height attr
-        //    .attr("preserveAspectRatio", "xMinYMin meet")
-        //    .attr("viewBox", "0 0 600 400")
-        //    //class to make it responsive
-        //    .classed("svg-content-responsive", true);
-        //    attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-        // load the data
         d3.json(this.resolveUrl("sankey-formatted.json"), function(error, graph) {
 
           sankey
