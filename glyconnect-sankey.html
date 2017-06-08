@@ -43,18 +43,12 @@ Creating a Sankey Graph for Glyconnect.
     </style>
     <div id="chart"></div>
     <iron-ajax
-            id="glycanCall"
-            url=""
+            id="apiCall"
+            url="http://mendel.isb-sib.ch:8083/api/sankey/structures/{{structureId}}"
             handle-as="json"
             method="GET"
             last-response="{{sankeyData}}"
-    ></iron-ajax>
-    <iron-ajax
-            id="proteinCall"
-            url=""
-            handle-as="json"
-            method="GET"
-            last-response="{{sankeyData}}"
+            on-response="_buildSankey"
     ></iron-ajax>
   </template>
 
@@ -67,19 +61,13 @@ Creating a Sankey Graph for Glyconnect.
         structureId: {
           type: String,
           reflectToAttribute: true,
-          //observer: 'changeStructureId'
+          observer: 'changeStructureId'
         },
         sankeyType: {
           type: String,
           value: 'glycan',
           reflectToAttribute: true
-        },
-
-      },
-      attached: function() {
-
-        this.sankeyCreate();
-        this.scopeSubtree(this.$.chart, true);
+        }
       },
 
       sankeyCreate: function() {
@@ -112,90 +100,89 @@ Creating a Sankey Graph for Glyconnect.
                 .size([width, height]);
         var path = sankey.link();
 
-          //Remove d3.json(this.resolveUrl("sankey-formatted.json"), function(error, graph) {
-          //change graph to this.sankeyData
-        d3.json(this.resolveUrl("sankey-formatted.json"), function(error, graph) {
+        sankey.nodes(this.sankeyData.nodes)
+                .links(this.sankeyData.links)
+                .layout(0);
 
-          sankey.nodes(graph.nodes)
-                  .links(graph.links)
-                  .layout(0);
+        // add in the links
+        var link = svg.append("g").selectAll(".link")
+                .data(this.sankeyData.links)
+                .enter().append("path")
+                .attr("class", "link")
+                .attr("d", path)
+                .style("stroke-width", function(d) { return Math.max(1, d.dy); })
+                .sort(function(a, b) { return b.dy - a.dy; });
 
-          // add in the links
-          var link = svg.append("g").selectAll(".link")
-                  .data(graph.links)
-                  .enter().append("path")
-                  .attr("class", "link")
-                  .attr("d", path)
-                  .style("stroke-width", function(d) { return Math.max(1, d.dy); })
-                  .sort(function(a, b) { return b.dy - a.dy; });
+        // add the link titles
+        link.append("title")
+                .text(function(d) {
+                  return d.source.name + " → " +
+                          d.target.name + "\n" + format(d.value); });
 
-          // add the link titles
-          link.append("title")
-                  .text(function(d) {
-                    return d.source.name + " → " +
-                            d.target.name + "\n" + format(d.value); });
+        // add in the nodes
+        var node = svg.append("g").selectAll(".node")
+                .data(this.sankeyData.nodes)
+                .enter().append("g")
+                .attr("class", "node")
+                .attr("transform", function(d) {
+                  return "translate(" + d.x + "," + d.y + ")"; })
+                .call(d3.behavior.drag()
+                        .origin(function(d) { return d; })
+                        .on("dragstart", function() {
+                          this.parentNode.appendChild(this); })
+                        .on("drag", dragmove));
 
-          // add in the nodes
-          var node = svg.append("g").selectAll(".node")
-                  .data(graph.nodes)
-                  .enter().append("g")
-                  .attr("class", "node")
-                  .attr("transform", function(d) {
-                    return "translate(" + d.x + "," + d.y + ")"; })
-                  .call(d3.behavior.drag()
-                          .origin(function(d) { return d; })
-                          .on("dragstart", function() {
-                            this.parentNode.appendChild(this); })
-                          .on("drag", dragmove));
+        // add the rectangles for the nodes
+        node.append("rect")
+                .attr("height", function(d) { return d.dy; })
+                .attr("width", sankey.nodeWidth())
+                .style("fill", function(d) {
+                  return d.color = color(d.name.replace(/ .*/, "")); })
+                .style("stroke", function(d) {
+                  return d3.rgb(d.color).darker(2); })
+                .append("title")
+                .text(function(d) {
+                  return d.name + "\n" + format(d.value); });
 
-          // add the rectangles for the nodes
-          node.append("rect")
-                  .attr("height", function(d) { return d.dy; })
-                  .attr("width", sankey.nodeWidth())
-                  .style("fill", function(d) {
-                    return d.color = color(d.name.replace(/ .*/, "")); })
-                  .style("stroke", function(d) {
-                    return d3.rgb(d.color).darker(2); })
-                  .append("title")
-                  .text(function(d) {
-                    return d.name + "\n" + format(d.value); });
+        // add in the title for the nodes
+        node.append("text")
+                .attr("x", -6)
+                .attr("y", function(d) { return d.dy / 2; })
+                .attr("dy", ".35em")
+                .attr("text-anchor", "end")
+                .attr("transform", null)
+                .text(function(d) { return d.name; })
+                .filter(function(d) { return d.x < width / 2; })
+                .attr("x", 6 + sankey.nodeWidth())
+                .attr("text-anchor", "start");
 
-          // add in the title for the nodes
-          node.append("text")
-                  .attr("x", -6)
-                  .attr("y", function(d) { return d.dy / 2; })
-                  .attr("dy", ".35em")
-                  .attr("text-anchor", "end")
-                  .attr("transform", null)
-                  .text(function(d) { return d.name; })
-                  .filter(function(d) { return d.x < width / 2; })
-                  .attr("x", 6 + sankey.nodeWidth())
-                  .attr("text-anchor", "start");
-
-          // the function for moving the nodes
-          function dragmove(d) {
-            d3.select(this).attr("transform",
-                    "translate(" + d.x + "," + (
-                            d.y = Math.max(0, Math.min(height - d.dy, d3.event.y))
-                    ) + ")");
-            sankey.relayout();
-            link.attr("d", path);
-          }
-        });
+        // the function for moving the nodes
+        function dragmove(d) {
+          d3.select(this).attr("transform",
+                  "translate(" + d.x + "," + (
+                          d.y = Math.max(0, Math.min(height - d.dy, d3.event.y))
+                  ) + ")");
+          sankey.relayout();
+          link.attr("d", path);
+        }
       },//Closing function
 
-      /*changeStructureId: function(){
+      changeStructureId: function(){
+        var call = this.$.apiCall;
         if(this.sankeyType.toLowerCase() == 'glycan'){
-          this.$.glycanCall.generateRequest();
+          call.url = 'http://mendel.isb-sib.ch:8083/api/sankey/structures/'+this.structureId;
         }
 
         if(this.sankeyType.toLowerCase() == 'protein'){
-          this.$.proteinCall.generateRequest();
+          call.url = 'http://mendel.isb-sib.ch:8083/api/sankey/proteins/'+this.structureId;
         }
+        call.generateRequest();
+      },
 
+      _buildSankey: function(){
         this.sankeyCreate();
         this.scopeSubtree(this.$.chart, true);
-      }*/
+      }
     });//this closes polymer, don't touch it.
   </script>
 </dom-module>
