@@ -86,7 +86,7 @@ Creating a Sankey Graph for Glyconnect.
         chart.innerHTML = "";
 
         var svg = d3.select(chart).append("svg")
-                .attr("viewBox", "0 0 1800 "+height)
+                .attr("viewBox", "0 0 1800 "+maxItem*120)
                 .append("g")
                 .attr("width", width + margin.left + margin.right)
                 .attr("height", height + margin.top + margin.bottom)
