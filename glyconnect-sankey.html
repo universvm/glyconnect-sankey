@@ -44,7 +44,6 @@ Creating a Sankey Graph for Glyconnect.
     <div id="chart"></div>
     <iron-ajax
             id="apiCall"
-            url="http://mendel.isb-sib.ch:8083/api/sankey/structures/{{structureId}}"
             handle-as="json"
             method="GET"
             last-response="{{sankeyData}}"
