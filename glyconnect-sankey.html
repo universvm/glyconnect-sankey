@@ -70,11 +70,12 @@ Creating a Sankey Graph for Glyconnect.
       },
 
       sankeyCreate: function() {
+        var maxItem = this._maxItem(this.sankeyData);
         var units = "Widgets";
 
         var margin = {top: 10, right: 10, bottom: 10, left: 10},
                 width = 1800 - margin.left - margin.right,
-                height = 600 - margin.top - margin.bottom;
+                height = maxItem*30 - margin.top - margin.bottom;
 
         var formatNumber = d3.format(",.0f"),    // zero decimal places
                 format = function(d) { return formatNumber(d) + " " + units; },
@@ -85,7 +86,7 @@ Creating a Sankey Graph for Glyconnect.
         chart.innerHTML = "";
 
         var svg = d3.select(chart).append("svg")
-                .attr("viewBox", "0 0 1800 600")
+                .attr("viewBox", "0 0 1800 "+height)
                 .append("g")
                 .attr("width", width + margin.left + margin.right)
                 .attr("height", height + margin.top + margin.bottom)
@@ -181,7 +182,37 @@ Creating a Sankey Graph for Glyconnect.
       _buildSankey: function(){
         this.sankeyCreate();
         this.scopeSubtree(this.$.chart, true);
+      },
+
+
+      _maxItem: function(json) {
+        var maxItems = 0;
+
+        var groups = JsonToDictionnary(json);
+        var keys = Object.keys(groups);
+        for(var i = 0; i < keys.length; i++) {
+          maxItems = Math.max(maxItems,groups[keys[i]]);
+        }
+        return maxItems;
+      },
+
+      _jsonToDictionnary: function(json) {
+        var groups = {};
+        var nodes = json.nodes;
+
+        for (var i = 0; i < nodes.length; i++){
+          var node = nodes[i];
+
+          if(groups[node.group] == null)
+          {
+            groups[node.group] = 0;
+          }
+          groups[node.group] = groups[node.group] + 1 ;
+        }
+        return groups;
       }
+
+
     });//this closes polymer, don't touch it.
   </script>
 </dom-module>
