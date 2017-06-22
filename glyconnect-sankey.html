@@ -1,4 +1,4 @@
-<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../polymer/polymer-elements.html">
 <link rel="import" href="../iron-ajax/iron-ajax.html">
 <!-- Importing D3 and the Sankey.Js -->
 <script src="https://d3js.org/d3.v3.js"></script>
@@ -52,24 +52,25 @@ Creating a Sankey Graph for Glyconnect.
   </template>
 
   <script>
-    Polymer({
+      /** @polymerElement */
+      class GlyconnectSankey extends Polymer.Element {
+      static get is() { return 'glyconnect-sankey'; }
+      static get properties() {
+        return {
+          structureId: {
+            type: String,
+            reflectToAttribute: true,
+            observer: 'changeStructureId'
+          },
+          sankeyType: {
+            type: String,
+            value: 'glycan',
+            reflectToAttribute: true
+          }
+        };
+      }
 
-      is: 'glyconnect-sankey',
-
-      properties:{
-        structureId: {
-          type: String,
-          reflectToAttribute: true,
-          observer: 'changeStructureId'
-        },
-        sankeyType: {
-          type: String,
-          value: 'glycan',
-          reflectToAttribute: true
-        }
-      },
-
-      sankeyCreate: function() {
+      sankeyCreate() {
         var maxItem = this._maxItem(this.sankeyData);
         var units = "Widgets";
 
@@ -165,9 +166,9 @@ Creating a Sankey Graph for Glyconnect.
           sankey.relayout();
           link.attr("d", path);
         }
-      },//Closing function
+      }//Closing function
 
-      changeStructureId: function(){
+      changeStructureId(){
         var call = this.$.apiCall;
         if(this.sankeyType.toLowerCase() == 'glycan'){
           call.url = 'http://mendel.isb-sib.ch:8083/api/sankey/structures/'+this.structureId;
@@ -177,15 +178,15 @@ Creating a Sankey Graph for Glyconnect.
           call.url = 'http://mendel.isb-sib.ch:8083/api/sankey/proteins/'+this.structureId;
         }
         call.generateRequest();
-      },
+      }
 
-      _buildSankey: function(){
+      _buildSankey(){
         this.sankeyCreate();
         this.scopeSubtree(this.$.chart, true);
-      },
+      }
 
 
-      _maxItem: function(json) {
+      _maxItem(json) {
         var maxItems = 0;
 
         var groups = this._jsonToDictionnary(json);
@@ -194,9 +195,9 @@ Creating a Sankey Graph for Glyconnect.
           maxItems = Math.max(maxItems,groups[keys[i]]);
         }
         return maxItems;
-      },
+      }
 
-      _jsonToDictionnary: function(json) {
+      _jsonToDictionnary(json) {
         var groups = {};
         var nodes = json.nodes;
 
@@ -213,6 +214,8 @@ Creating a Sankey Graph for Glyconnect.
       }
 
 
-    });//this closes polymer, don't touch it.
+    }//this closes polymer, don't touch it.
+
+    window.customElements.define(GlyconnectSankey.is, GlyconnectSankey);
   </script>
 </dom-module>
