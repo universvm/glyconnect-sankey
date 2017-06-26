@@ -170,11 +170,11 @@ Creating a Sankey Graph for Glyconnect.
 
       changeStructureId(){
         var call = this.$.apiCall;
-        if(this.sankeyType.toLowerCase() == 'glycan'){
+        if(this.sankeyType.toLowerCase() === 'glycan'){
           call.url = 'http://mendel.isb-sib.ch:8083/api/sankey/structures/'+this.structureId;
         }
 
-        if(this.sankeyType.toLowerCase() == 'protein'){
+        if(this.sankeyType.toLowerCase() === 'protein'){
           call.url = 'http://mendel.isb-sib.ch:8083/api/sankey/proteins/'+this.structureId;
         }
         call.generateRequest();
@@ -182,7 +182,8 @@ Creating a Sankey Graph for Glyconnect.
 
       _buildSankey(){
         this.sankeyCreate();
-        this.scopeSubtree(this.$.chart, true);
+        //Polymer 2.0 solve CSS issue.
+        //this.scopeSubtree(this.$.chart, true);
       }
 
 
