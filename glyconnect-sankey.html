@@ -8,7 +8,7 @@
 <!--
 `glyconnect-sankey`
 Creating a Sankey Graph for Glyconnect.
-
+TODO: look how to import d3 in a better way.
 @demo demo/index.html
 -->
 
@@ -183,10 +183,7 @@ Creating a Sankey Graph for Glyconnect.
       }
 
       _buildSankey(data){
-        var sankeyData = data.detail.response;
-        this.sankeyCreate(sankeyData);
-        //Polymer 2.0 solve CSS issue.
-        //this.scopeSubtree(this.$.chart, true);
+        this.sankeyCreate(data.detail.response);
       }
 
 
