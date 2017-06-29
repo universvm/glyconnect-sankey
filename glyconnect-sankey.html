@@ -47,7 +47,6 @@ Creating a Sankey Graph for Glyconnect.
             id="apiCall"
             handle-as="json"
             method="GET"
-            last-response="{{sankeyData}}"
             on-response="_buildSankey"
     ></iron-ajax>
   </template>
@@ -71,8 +70,8 @@ Creating a Sankey Graph for Glyconnect.
         };
       }
 
-      sankeyCreate() {
-        var maxItem = this._maxItem(this.sankeyData);
+      sankeyCreate(sankeyData) {
+        var maxItem = this._maxItem(sankeyData);
         var units = "Widgets";
 
         var margin = {top: 10, right: 10, bottom: 10, left: 10},
@@ -102,13 +101,13 @@ Creating a Sankey Graph for Glyconnect.
                 .size([width, height]);
         var path = sankey.link();
 
-        sankey.nodes(this.sankeyData.nodes)
-                .links(this.sankeyData.links)
+        sankey.nodes(sankeyData.nodes)
+                .links(sankeyData.links)
                 .layout(0);
 
         // add in the links
         var link = svg.append("g").selectAll(".link")
-                .data(this.sankeyData.links)
+                .data(sankeyData.links)
                 .enter().append("path")
                 .attr("class", "link")
                 .attr("d", path)
@@ -123,7 +122,7 @@ Creating a Sankey Graph for Glyconnect.
 
         // add in the nodes
         var node = svg.append("g").selectAll(".node")
-                .data(this.sankeyData.nodes)
+                .data(sankeyData.nodes)
                 .enter().append("g")
                 .attr("class", "node")
                 .attr("transform", function(d) {
@@ -183,8 +182,9 @@ Creating a Sankey Graph for Glyconnect.
         }
       }
 
-      _buildSankey(){
-        this.sankeyCreate();
+      _buildSankey(data){
+        var sankeyData = data.detail.response;
+        this.sankeyCreate(sankeyData);
         //Polymer 2.0 solve CSS issue.
         //this.scopeSubtree(this.$.chart, true);
       }
