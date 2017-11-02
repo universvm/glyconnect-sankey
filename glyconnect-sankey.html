@@ -169,7 +169,7 @@ TODO: look how to import d3 in a better way.
       }//Closing function
 
       changeStructureId(){
-        if(this.structureId !== undefined && this.sankeyType !== undefined){
+        if(this.structureId !== "undefined" && this.sankeyType !== "undefined"){
           var call = this.$.apiCall;
           if(this.sankeyType.toLowerCase() === 'glycan'){
             call.url = 'http://mendel.isb-sib.ch:8083/api/sankey/structures/'+this.structureId;
