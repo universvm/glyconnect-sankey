@@ -8,7 +8,6 @@
 <!--
 `glyconnect-sankey`
 Creating a Sankey Graph for Glyconnect.
-TODO: look how to import d3 in a better way.
 @demo demo/index.html
 -->
 
@@ -65,6 +64,10 @@ TODO: look how to import d3 in a better way.
           sankeyType: {
             type: String,
             value: 'glycan',
+            reflectToAttribute: true
+          },
+          apiServer:{
+            type: String,
             reflectToAttribute: true
           }
         };
@@ -172,11 +175,11 @@ TODO: look how to import d3 in a better way.
         if(this.structureId !== undefined && this.sankeyType !== undefined){
           var call = this.$.apiCall;
           if(this.sankeyType.toLowerCase() === 'glycan'){
-            call.url = 'http://mendel.isb-sib.ch:8083/api/sankey/structures/'+this.structureId;
+            call.url = this.apiServer+'/api/sankey/structures/'+this.structureId;
           }
 
           if(this.sankeyType.toLowerCase() === 'protein'){
-            call.url = 'http://mendel.isb-sib.ch:8083/api/sankey/proteins/'+this.structureId;
+            call.url = this.apiServer+'/api/sankey/proteins/'+this.structureId;
           }
           call.generateRequest();
         }
