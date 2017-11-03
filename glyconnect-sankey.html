@@ -172,7 +172,7 @@ Creating a Sankey Graph for Glyconnect.
       }//Closing function
 
       changeStructureId(){
-        if(this.structureId !== undefined && this.sankeyType !== undefined){
+        if(this.structureId !== "undefined" && this.sankeyType !== "undefined"){
           var call = this.$.apiCall;
           if(this.sankeyType.toLowerCase() === 'glycan'){
             call.url = this.apiServer+'/api/sankey/structures/'+this.structureId;
