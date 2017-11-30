@@ -106,7 +106,7 @@ Creating a Sankey Graph for Glyconnect.
 
         sankey.nodes(sankeyData.nodes)
                 .links(sankeyData.links)
-                .layout(0);
+                .layout(0,this.sankeyType);
 
         // add in the links
         var link = svg.append("g").selectAll(".link")
