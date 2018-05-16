@@ -37,10 +37,23 @@ Creating a Sankey Graph for Glyconnect.
       .link:hover {
         stroke-opacity: .5;
       }
+
       #chart {
         padding: 10px;
       }
+
+      .warningCard {
+        padding:15px;
+        color: #fff;
+        background: #C83737;
+      }
+
     </style>
+    <template is="dom-if" if="{{warningMessage}}">
+      <div class="warningCard">
+        <span>Sorry, this diagram is too crowded. We are working on a different solution.</span>
+      </div>
+    </template>
     <div id="chart"></div>
     <iron-ajax
             id="apiCall"
@@ -69,11 +82,20 @@ Creating a Sankey Graph for Glyconnect.
           apiServer:{
             type: String,
             reflectToAttribute: true
+          },
+          warningMessage: {
+            type: Boolean,
+            value: false
           }
         };
       }
 
       sankeyCreate(sankeyData) {
+        if(sankeyData.links.size > 120) {
+          this.warningMessage = true;
+        } else {
+          this.warningMessage = false;
+        }
         var maxItem = this._maxItem(sankeyData);
         var units = "Widgets";
 
