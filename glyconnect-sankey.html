@@ -43,6 +43,8 @@ Creating a Sankey Graph for Glyconnect.
       }
 
       .warningCard {
+        border-radius: 10px;
+        margin: 15px;
         padding:15px;
         color: #fff;
         background: #C83737;
@@ -91,7 +93,7 @@ Creating a Sankey Graph for Glyconnect.
       }
 
       sankeyCreate(sankeyData) {
-        if(sankeyData.links.size > 120) {
+        if(sankeyData.links.length > 120) {
           this.warningMessage = true;
         } else {
           this.warningMessage = false;
